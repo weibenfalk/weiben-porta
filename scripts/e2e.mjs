@@ -14,7 +14,7 @@ const [,, url, port = '9222', label = 'build'] = process.argv;
 const CH = process.env.CHROME_PATH || '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome';
 const dir = mkdtempSync(join(tmpdir(), 'chr-'));
 const proc = spawn(CH, ['--headless=new','--disable-gpu','--no-first-run','--hide-scrollbars',`--user-data-dir=${dir}`,`--remote-debugging-port=${port}`,
-  '--use-fake-device-for-media-stream','--use-fake-ui-for-media-stream','--autoplay-policy=no-user-gesture-required','--window-size=1280,900','about:blank'],{stdio:'ignore'});
+  '--mute-audio','--use-fake-device-for-media-stream','--use-fake-ui-for-media-stream','--autoplay-policy=no-user-gesture-required','--window-size=1280,900','about:blank'],{stdio:'ignore'});
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 let targets; for (let i=0;i<50;i++){ try { targets = await (await fetch(`http://127.0.0.1:${port}/json`)).json(); if (targets.find(t=>t.type==='page')) break; } catch {} await sleep(200); }
 const page = targets.find(t=>t.type==='page');
