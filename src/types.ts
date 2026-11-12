@@ -19,7 +19,7 @@ export interface TrackSettings {
   src: number;
   /** input gain in dB, applied before the signal is recorded */
   trim: number;
-  /** low shelf (100 Hz) and high shelf (10 kHz) in dB */
+  /** low shelf (200 Hz) and high shelf (4 kHz) in dB */
   lo: number;
   hi: number;
 }

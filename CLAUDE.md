@@ -48,6 +48,6 @@ Beware of names that exist as browser globals, such as `stop()`: a missing impor
 Each track has `{vol, pan, eko, rev, src, trim, lo, hi}` in `S.tracks[i]`.
 
 - `trim` (dB) is input gain applied **before** recording, on `rt.trackIn[i]`. The take is stored post-trim. Auto trim sets it per armed track from that track's input peak.
-- `lo` / `hi` (dB) are per-channel low-shelf (100 Hz) and high-shelf (10 kHz) filters in `graph.ts`, between the channel input and the fader. They apply at playback and mixdown, not to the recorded data.
+- `lo` / `hi` (dB) are per-channel low-shelf (200 Hz) and high-shelf (4 kHz) filters, +-15 dB, in `graph.ts` (100 Hz / 10 kHz as on a Portastudio 414 was measured at only +0.4 dB at 250 Hz and +0.5 dB at 5 kHz for a full boost, so it was inaudible on voice and guitar), between the channel input and the fader. They apply at playback and mixdown, not to the recorded data.
 - Every strip uses the same CSS grid row template (`.strip` in `mixer.css`: vu, input select, arm, then the trim, eq and fx·pan sections, then the fader). From 1200 px wide, eq high/low and echo/reverb sit side by side (`.pair`), which removes two rows. The input and master strips fill the same rows with `blank()` placeholders (`.eq2` marks the ones that only exist when the knobs stack) and `.cell.tall` spans, so controls line up across strips. Changing a strip's row count means changing the `.strip` templates in mixer.css (base and the 1200 px query), the phone override in dialogs.css, and `buildMixerUI`.
 - UI text is lowercase silkscreen style.

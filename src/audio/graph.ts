@@ -1,8 +1,8 @@
 import { MIX_DELAY } from '../config.js';
 import { S } from '../state.js';
 import type { Channel, Mixer } from '../types.js';
-const EQ_LO_HZ = 100; // shelving corners of the per-channel eq
-const EQ_HI_HZ = 10000;
+const EQ_LO_HZ = 200; // shelving corners of the per-channel eq (the 100 Hz / 10 kHz of a Portastudio 414 sat outside where voices and guitars live, so it was barely audible)
+const EQ_HI_HZ = 4000;
 const TRACKS = 4;
 
 /* ---------- tape saturation curves ---------- */
