@@ -1,10 +1,9 @@
 import { clamp } from '../util.js';
 
-/** 16-bit wav file. */
-export function encodeWav(buf: AudioBuffer) {
-  const n = buf.length,
-    ch = buf.numberOfChannels,
-    sr = buf.sampleRate,
+/** 16-bit wav file from one array of samples per channel (all the same length). */
+export function wavBytes(d: Float32Array[], sr: number) {
+  const n = d[0].length,
+    ch = d.length,
     v = new DataView(new ArrayBuffer(44 + n * ch * 2));
   const w = (o: number, s: string) => {
     for (let i = 0; i < s.length; i++) v.setUint8(o + i, s.charCodeAt(i));
@@ -21,8 +20,6 @@ export function encodeWav(buf: AudioBuffer) {
   v.setUint16(34, 16, true);
   w(36, 'data');
   v.setUint32(40, n * ch * 2, true);
-  const d = [];
-  for (let c = 0; c < ch; c++) d.push(buf.getChannelData(c));
   let o = 44;
   for (let i = 0; i < n; i++)
     for (let c = 0; c < ch; c++) {
@@ -30,5 +27,12 @@ export function encodeWav(buf: AudioBuffer) {
       v.setInt16(o, x < 0 ? x * 32768 : x * 32767, true);
       o += 2;
     }
-  return new Blob([v.buffer], { type: 'audio/wav' });
+  return v.buffer;
+}
+
+/** 16-bit wav file. */
+export function encodeWav(buf: AudioBuffer) {
+  const d = [];
+  for (let c = 0; c < buf.numberOfChannels; c++) d.push(buf.getChannelData(c));
+  return new Blob([wavBytes(d, buf.sampleRate)], { type: 'audio/wav' });
 }

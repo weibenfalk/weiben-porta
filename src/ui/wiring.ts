@@ -3,6 +3,7 @@ import { ensureCtx, powerOff, setMonitors, setTrackData } from '../audio/engine.
 import { listDevices, openMic } from '../audio/inputs.js';
 import { mixChanged } from '../audio/mix.js';
 import { mixdown } from '../audio/mixdown.js';
+import { exportTracks } from '../audio/stems.js';
 import { browserEstimate, calibrate, syncKey } from '../audio/sync.js';
 import { contentEnd, nudge, play, record, seek, stop, undoTake } from '../audio/transport.js';
 import { rt } from '../runtime.js';
@@ -54,6 +55,7 @@ function wireTransport() {
   $('undo').addEventListener('click', undoTake);
   $('mix').addEventListener('click', () => mixdown('wav'));
   $('mix3').addEventListener('click', () => mixdown('mp3'));
+  $('zip').addEventListener('click', exportTracks);
   $('auto').addEventListener('click', autoLevel);
   wireWinding($('rew'), -1);
   wireWinding($('ff'), 1);

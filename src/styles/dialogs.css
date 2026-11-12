@@ -83,5 +83,10 @@ kbd{font:inherit;font-weight:600;background:#3f4537;border-radius:3px;padding:0 
 }
 @media (max-width:389px){
   .strip.inp{flex-wrap:wrap}   /* the six controls no longer fit side by side */
+  .small{gap:4px}              /* six buttons: wav, mp3 and zip next to the three icons */
+  .btn.icon{padding:0 4px}
+}
+@media (max-width:339px){
+  .btn.icon svg:not(:only-child){display:none}   /* the three export buttons keep only their label */
 }
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}

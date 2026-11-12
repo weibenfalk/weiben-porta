@@ -64,6 +64,18 @@ export async function encodeMp3(buf: AudioBuffer, onProgress: (percent: number) 
   if (end.length) parts.push(new Uint8Array(end));
   return new Blob(parts, { type: 'audio/mpeg' });
 }
+/** Hand `blob` to the browser as a download called `name`. */
+export function saveBlob(blob: Blob, name: string) {
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = name;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  setTimeout(() => URL.revokeObjectURL(a.href), 20000);
+}
+/** The title of the tape as a safe file name. */
+export const fileBase = () => (S.title.trim() || 'demo').replace(/[\\/:*?"<>|]+/g, ' ');
 export /** Mix down to a downloadable file. */
 async function mixdown(kind: 'wav' | 'mp3') {
   if (rt.busy || rt.transport !== 'stop') {
@@ -78,7 +90,7 @@ async function mixdown(kind: 'wav' | 'mp3') {
   say('mixing down …');
   try {
     const r = (await renderMix())!,
-      base = (S.title.trim() || 'demo').replace(/[\\/:*?"<>|]+/g, ' ');
+      base = fileBase();
     let blob: Blob, name: string;
     if (kind === 'mp3') {
       if (typeof lamejs === 'undefined') throw new Error('no encoder');
@@ -95,13 +107,7 @@ async function mixdown(kind: 'wav' | 'mp3') {
       blob = encodeWav(r);
       name = base + '.wav';
     }
-    const a = document.createElement('a');
-    a.href = URL.createObjectURL(blob);
-    a.download = name;
-    document.body.appendChild(a);
-    a.click();
-    a.remove();
-    setTimeout(() => URL.revokeObjectURL(a.href), 20000);
+    saveBlob(blob, name);
     say(`done. ${name} is in your downloads${kind === 'mp3' ? ' (mp3, 320 kbit/s)' : ''}.`);
   } catch (e) {
     say('the mixdown failed. try again with a shorter tape.');
