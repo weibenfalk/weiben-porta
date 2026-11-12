@@ -21,6 +21,7 @@
 }
 *{box-sizing:border-box}
 html,body{margin:0}
+html{-webkit-text-size-adjust:100%;text-size-adjust:100%;touch-action:manipulation}   /* no text inflation on rotate, no double-tap zoom */
 html{min-height:100%;background:var(--tex-grain),radial-gradient(1100px 620px at 42% -40px,#4a5142,#2b2f27 45%,#171914 100%) no-repeat #171914;
   background-blend-mode:overlay,normal}
 body{
@@ -30,4 +31,7 @@ body{
 }
 button,input,select{font:inherit;color:inherit}
 :focus-visible{outline:2px solid #fff;outline-offset:2px;box-shadow:0 0 0 4px #000}
-
+/* iOS zooms the whole page when a field with text smaller than 16px gets focus, and then leaves it zoomed. */
+@media (pointer:coarse){
+  input,select,textarea{font-size:16px!important}
+}

@@ -30,6 +30,16 @@ let lastTs = 0,
   lastView = 60,
   peakHold = 0;
 const needleAng = [-46, -46, -46, -46];
+/* What was last written to the DOM. Writing an unchanged value still makes the browser re-check (and sometimes repaint),
+   and on a phone that adds up to a warm device. */
+const lastNeedle = ['', '', '', ''];
+let lastPackL = '',
+  lastPackR = '',
+  lastHead = '',
+  meterTs = 0;
+/* Measured once and on resize. Reading clientWidth inside the frame forced a layout every single frame. */
+let mapW = mapwrap.clientWidth;
+new ResizeObserver(() => (mapW = mapwrap.clientWidth)).observe(mapwrap);
 const anBuf = new Float32Array(1024);
 /** [rms, peak] of what an analyser currently hears. */
 function levelOf(an: AnalyserNode) {
@@ -97,8 +107,10 @@ export function frame(ts: number) {
   const fr = p / TAPE,
     rL = Math.sqrt(2116 + (8464 - 2116) * (1 - fr)),
     rR = Math.sqrt(2116 + (8464 - 2116) * fr);
-  packL.setAttribute('r', rL.toFixed(1));
-  packR.setAttribute('r', rR.toFixed(1));
+  const pl = rL.toFixed(1),
+    pr = rR.toFixed(1);
+  if (pl !== lastPackL) packL.setAttribute('r', (lastPackL = pl));
+  if (pr !== lastPackR) packR.setAttribute('r', (lastPackR = pr));
   if (speed && !reduceMotion) {
     angL -= (speed * dt * 12600) / rL;
     angR -= (speed * dt * 12600) / rR;
@@ -110,14 +122,26 @@ export function frame(ts: number) {
     lastView = need;
     drawMap();
   }
-  head.style.transform = `translateX(${(clamp(p / rt.viewLen, 0, 1) * (mapwrap.clientWidth - 2)).toFixed(1)}px)`;
+  const hx = `translateX(${(clamp(p / rt.viewLen, 0, 1) * (mapW - 2)).toFixed(1)}px)`;
+  if (hx !== lastHead) head.style.transform = lastHead = hx;
+  // the meters move at 30 frames a second: half the analyser reads and needle repaints, and the eye cannot tell
+  if (ts - meterTs >= 30) {
+    const mdt = Math.min(0.1, (ts - meterTs) / 1000);
+    meterTs = ts;
+    meters(ts, mdt);
+  }
+  requestAnimationFrame(frame);
+}
+
+/** VU needles and the peak lamp. */
+function meters(ts: number, dt: number) {
   let inLv = null;
   if (rt.ctx && rt.micOK && rt.ctx.state === 'running') {
     inLv = [];
     for (let k = 0; k < rt.nIn; k++) {
       const l = levelOf(rt.rawAn[k]);
       inLv.push(l);
-      rt.pkIn[k] = Math.max(l[1], rt.pkIn[k] * 0.995);
+      rt.pkIn[k] = Math.max(l[1], rt.pkIn[k] * 0.99);
     }
   }
   for (let i = 0; i < 4; i++) {
@@ -125,12 +149,13 @@ export function frame(ts: number) {
     if (rt.ctx && rt.ctx.state === 'running') {
       const showInput =
         inLv && S.arm[i] && (rt.transport === 'stop' || (rt.transport === 'rec' && rt.recTracks.includes(i)));
-      target = vuAngle(
-        showInput ? (inLv![S.tracks[i].src] || [0])[0] * trimOf(i) : levelOf(rt.live.ch[i].an!)[0]
-      );
+      // with the tape stopped nothing reaches a channel except the live input, so there is nothing to read
+      if (showInput) target = vuAngle((inLv![S.tracks[i].src] || [0])[0] * trimOf(i));
+      else if (rt.transport !== 'stop') target = vuAngle(levelOf(rt.live.ch[i].an!)[0]);
     }
     needleAng[i] += (target - needleAng[i]) * Math.min(1, dt * 9);
-    needles[i].setAttribute('transform', `rotate(${needleAng[i].toFixed(1)} 50 80)`);
+    const tf = `rotate(${needleAng[i].toFixed(1)} 50 80)`;
+    if (tf !== lastNeedle[i]) needles[i].setAttribute('transform', (lastNeedle[i] = tf));
   }
   if (inLv) {
     let pk = 0;
@@ -139,5 +164,4 @@ export function frame(ts: number) {
     if (pk > 0.9) peakHold = ts + 700;
     $('peakLamp').classList.toggle('lit', ts < peakHold);
   }
-  requestAnimationFrame(frame);
 }

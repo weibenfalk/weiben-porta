@@ -5,9 +5,11 @@
 .window::after{z-index:3;background:
   linear-gradient(118deg,rgba(255,255,255,.17) 0,rgba(255,255,255,.05) 17%,rgba(255,255,255,0) 17.3%,rgba(255,255,255,0) 58%,rgba(255,255,255,.07) 58.3%,rgba(255,255,255,.02) 65%,rgba(255,255,255,0) 65.3%),
   linear-gradient(180deg,rgba(255,255,255,.14),rgba(255,255,255,0) 9%)}
-.cassette{position:relative;filter:drop-shadow(0 7px 7px rgba(0,0,0,.75))}
+.cassette{position:relative}
+/* a box-shadow on the shell instead of a drop-shadow filter on the whole cassette: the reels move every frame, and the filter was redone each time */
+.cassette .c-shell{border-radius:3.5%/5.5%;box-shadow:0 7px 7px rgba(0,0,0,.75)}
 .cassette svg{display:block;width:100%;height:auto}
-.cassette .c-reels,.cassette .c-glass{position:absolute;inset:0;height:100%;will-change:transform}
+.cassette .c-reels,.cassette .c-glass{position:absolute;inset:0;height:100%}
 .cassette .c-glass{pointer-events:none}
 #title{position:absolute;left:11%;top:8%;width:78%;height:17%;border:0;background:transparent;text-align:center;z-index:2;
   font-family:var(--hand);font-size:clamp(20px,6.2vw,30px);color:#1c2a55;padding:0;text-shadow:none}

@@ -20,6 +20,9 @@ const CLEAN = curve(x => {
 /** "tape sound": soft saturation all the way */
 const WARM = curve(x => Math.tanh(0.8 * x) / 0.8);
 
+/** The curve each shaper has now. Assigning `.curve` copies 4097 values on the audio thread, so it is only done when it changes. */
+const shaperCurve = new WeakMap<WaveShaperNode, Float32Array>();
+
 /** A synthetic room: filtered noise with an exponential decay. Seeded, so every render is identical. */
 export function makeIR(ac: BaseAudioContext, len: number) {
   const sr = ac.sampleRate;
@@ -180,7 +183,11 @@ export function applyMix(m: Mixer, ac: BaseAudioContext, instant: boolean) {
   });
   set(m.delay.delayTime, S.ekoTime, 0.06);
   set(m.fb.gain, S.ekoFb);
-  m.shaper.curve = S.tapeFx ? WARM : CLEAN;
+  const wanted = S.tapeFx ? WARM : CLEAN;
+  if (shaperCurve.get(m.shaper) !== wanted) {
+    m.shaper.curve = wanted;
+    shaperCurve.set(m.shaper, wanted);
+  }
   set(m.shelf.gain, S.tapeFx ? -3 : 0);
   set(m.g1.gain, S.tapeFx ? 0.00025 : 0);
   set(m.g2.gain, S.tapeFx ? 0.00003 : 0);
