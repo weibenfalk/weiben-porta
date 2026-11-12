@@ -64,7 +64,7 @@ export function buildMixerUI() {
   blank(inp, 1);
   blank(inp, 1, 'eq2');
   mx.appendChild(inp);
-  /* four tracks: trim, eq, then echo / reverb / pan and the fader */
+  /* four tracks: trim, eq, then delay / reverb / pan and the fader */
   controls.trim = [];
   for (let i = 0; i < 4; i++) {
     const st = h('div', 'strip');
@@ -147,9 +147,9 @@ export function buildMixerUI() {
     });
     sec(st, 'fx · pan');
     const fx = st.appendChild(h('div', 'pair'));
-    knobCell(fx, 'echo', {
+    knobCell(fx, 'delay', {
       small: true,
-      label: `echo track ${i + 1}`,
+      label: `delay track ${i + 1}`,
       min: 0,
       max: 1,
       value: tr.eko,
@@ -220,7 +220,7 @@ export function buildMixerUI() {
   const mfx = ms.appendChild(h('div', 'pair'));
   knobCell(mfx, 'delay', {
     small: true,
-    label: 'echo time',
+    label: 'delay time',
     min: 0.06,
     max: 0.8,
     value: S.ekoTime,
@@ -233,7 +233,7 @@ export function buildMixerUI() {
   });
   knobCell(mfx, 'repeat', {
     small: true,
-    label: 'echo repeats',
+    label: 'delay repeats',
     min: 0,
     max: 0.85,
     value: S.ekoFb,

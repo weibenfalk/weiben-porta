@@ -44,7 +44,7 @@ export function makeIR(ac: BaseAudioContext, len: number) {
   return b;
 }
 
-/** One channel strip: input -> low shelf -> high shelf -> fader -> pan, with echo and reverb sends after the fader. */
+/** One channel strip: input -> low shelf -> high shelf -> fader -> pan, with delay and reverb sends after the fader. */
 function buildChannel(ac: BaseAudioContext, sum: AudioNode, ekoIn: AudioNode, revIn: AudioNode): Channel {
   const c: Channel = {
     input: ac.createGain(),
@@ -78,7 +78,7 @@ function buildChannel(ac: BaseAudioContext, sum: AudioNode, ekoIn: AudioNode, re
 export function buildMixer(ac: BaseAudioContext, dest: AudioNode): Mixer {
   const sum = ac.createGain();
 
-  // echo: a delay line with a high-pass and low-pass in the feedback loop
+  // delay: a delay line with a high-pass and low-pass in the feedback loop
   const ekoIn = ac.createGain();
   const delay = ac.createDelay(1.5);
   const fb = ac.createGain();

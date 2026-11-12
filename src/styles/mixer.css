@@ -61,7 +61,7 @@
 .syncval{font-variant-numeric:tabular-nums}
 
 
-/* wide screens: eq high/low and echo/reverb side by side, so the strip is two rows shorter */
+/* wide screens: eq high/low and delay/reverb side by side, so the strip is two rows shorter */
 @media (min-width:1200px){
   .machine{max-width:1180px}
   .mixer{grid-template-columns:1fr repeat(4,1.25fr) 1fr}

@@ -8,7 +8,7 @@ import { contentEnd } from './transport.js';
 import { encodeWav } from './wav.js';
 /* Mixdown: render the tape through the same mixer graph offline, then encode it as wav or mp3. */
 
-/** Render the whole tape to a stereo AudioBuffer, with room for the echo and reverb tails. */
+/** Render the whole tape to a stereo AudioBuffer, with room for the delay and reverb tails. */
 export async function renderMix() {
   const end = contentEnd();
   if (!end) return null;
