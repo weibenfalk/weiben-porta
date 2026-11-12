@@ -11,7 +11,14 @@ import { resample } from './resample.js';
 /* The audio engine: creates the audio context and the graph around the mixer, and routes the
    sound card inputs to the four tracks. */
 
-/** Put recorded audio on a track, as both samples and an AudioBuffer for playback. */
+/**
+ * Put recorded audio on a track, as both samples and an AudioBuffer for playback.
+ *
+ * `data` is kept as our own array and only *copied* into the AudioBuffer. Do not keep the array from
+ * `buf.getChannelData()` instead: when a buffer is given to a source node, the Web Audio spec says the
+ * arrays handed out earlier are detached, and Firefox does that. The tape would turn empty after the
+ * first playback (playback stopped after a second, and "the tape is empty").
+ */
 export function setTrackData(i: number, data: Samples | null) {
   if (!data || !data.length) {
     tape[i] = null;
@@ -20,7 +27,7 @@ export function setTrackData(i: number, data: Samples | null) {
   const sr = rt.ctx.sampleRate,
     buf = rt.ctx.createBuffer(1, data.length, sr);
   buf.copyToChannel(data, 0);
-  tape[i] = { data: buf.getChannelData(0), sr, buf };
+  tape[i] = { data, sr, buf };
 }
 /** Switch the audio on (once): builds the context, the mixer and the recorder. Resolves when the recorder is ready. */
 export function ensureCtx() {

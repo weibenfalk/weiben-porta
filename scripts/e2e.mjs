@@ -30,6 +30,14 @@ await send('Runtime.enable'); await send('Page.enable');
 const out = { label, steps:{} };
 const step = async (name, fn) => { try { out.steps[name] = await fn(); } catch (e) { out.steps[name] = 'ERROR: ' + e.message; } };
 
+// Emulate the Web Audio spec's "acquire the content": when a buffer is handed to a source node with start(),
+// the arrays previously returned by getChannelData() are detached (Firefox does this, Chrome does not).
+await send('Page.addScriptToEvaluateOnNewDocument',{source:`(()=>{
+  const get=AudioBuffer.prototype.getChannelData; const seen=new WeakMap();
+  AudioBuffer.prototype.getChannelData=function(c){ const a=get.call(this,c); (seen.get(this)||seen.set(this,[]).get(this)).push(a); return a; };
+  const start=AudioBufferSourceNode.prototype.start;
+  AudioBufferSourceNode.prototype.start=function(...args){ const b=this.buffer; if(b&&seen.has(b)){ for(const a of seen.get(b)){ try{ structuredClone(a.buffer,{transfer:[a.buffer]}); }catch(e){ window.__detachFail=String(e); } } seen.delete(b); } return start.apply(this,args); };
+})()`});
 await send('Page.navigate',{url}); await sleep(1500);
 await step('boot', () => ev(`({title: document.title, hasHook: !!window.__fyr, mixerChildren: document.getElementById('mixer').children.length, knobs: document.querySelectorAll('.knob').length, faders: document.querySelectorAll('.fader').length, help: document.getElementById('helpDlg').open})`));
 await step('domHash', () => ev(`(async()=>{ const s=document.body.innerHTML.replace(/\\s+/g,' '); const b=new TextEncoder().encode(s); const h=await crypto.subtle.digest('SHA-256',b); return [...new Uint8Array(h)].map(x=>x.toString(16).padStart(2,'0')).join('').slice(0,16)+' len='+s.length })()`));
