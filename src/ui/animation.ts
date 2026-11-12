@@ -5,6 +5,7 @@ import { rt } from '../runtime.js';
 import { S } from '../state.js';
 import { $, clamp, reduceMotion } from '../util.js';
 import { say } from './display.js';
+import { sampleHealth } from './health.js';
 import { needles } from './mixerUI.js';
 import { drawMap, head, mapwrap } from './tapeMap.js';
 /* ---------- animation: counter, reels, needles ---------- */
@@ -80,6 +81,7 @@ function vuAngle(rms: number) {
 /** One animation frame: tape counter, reels, playhead, VU needles and the peak lamp. Runs every frame. */
 export function frame(ts: number) {
   const dt = Math.min(0.1, (ts - lastTs) / 1000 || 0);
+  if (lastTs) sampleHealth(ts, ts - lastTs);
   lastTs = ts;
   let p = rt.pos,
     speed = 0;

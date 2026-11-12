@@ -1,6 +1,7 @@
 import { rec } from '../audio/recorder.js';
 import { rt } from '../runtime.js';
 import { S } from '../state.js';
+import { health } from './health.js';
 const dB = (x: number) => (x > 1e-6 ? (20 * Math.log10(x)).toFixed(1) + ' dBFS' : 'silent');
 const msT = (x: number | null | undefined) =>
   x == null || !isFinite(x) ? 'n/a' : Math.round(x * 1000) + ' ms';
@@ -16,6 +17,9 @@ export function diagText() {
   );
   L.push(
     'recorder: ' + (rec.mode === 'worklet' ? 'audio thread (exact)' : 'fallback on main thread (may crackle)')
+  );
+  L.push(
+    `screen: ${health.slow} of ${health.frames} frames took more than 50 ms (worst ${health.worstMs} ms). audio clock: lost ${health.audioLostMs} ms in ${health.audioSecs} s`
   );
   L.push('inputs found:');
   rt.seenInputs.forEach(d => L.push((d.active ? '  > ' : '    ') + d.label));

@@ -13,9 +13,11 @@
   --t1:#d9a31f; --t2:#4f8d57; --t3:#3d7fb1; --t4:#c85a2e;
   --font:"Jost","Century Gothic","Futura","Avenir Next","Trebuchet MS",sans-serif;
   --hand:"Caveat","Bradley Hand","Segoe Print","Comic Sans MS",cursive;
-  --tex-brushed:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1400' height='900' preserveAspectRatio='none' viewBox='0 0 1400 900'%3E%3Cfilter id='f' x='0' y='0' width='100%25' height='100%25'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.004 0.9' numOctaves='3' seed='7'/%3E%3CfeColorMatrix type='matrix' values='.33 .33 .33 0 0 .33 .33 .33 0 0 .33 .33 .33 0 0 0 0 0 0 0.75'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23f)'/%3E%3C/svg%3E");
-  --tex-wood:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='96' height='1100' preserveAspectRatio='none' viewBox='0 0 96 1100'%3E%3Cfilter id='f' x='0' y='0' width='100%25' height='100%25'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.32 0.006' numOctaves='4' seed='11'/%3E%3CfeColorMatrix type='matrix' values='.33 .33 .33 0 0 .33 .33 .33 0 0 .33 .33 .33 0 0 0 0 0 0 0.9'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23f)'/%3E%3C/svg%3E");
-  --tex-grain:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='600' height='600' preserveAspectRatio='none' viewBox='0 0 600 600'%3E%3Cfilter id='f' x='0' y='0' width='100%25' height='100%25'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85 0.85' numOctaves='2' seed='5' stitchTiles='stitch'/%3E%3CfeColorMatrix type='matrix' values='.33 .33 .33 0 0 .33 .33 .33 0 0 .33 .33 .33 0 0 0 0 0 0 0.6'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23f)'/%3E%3C/svg%3E");
+  /* Noise textures are pre-rendered grey WebP files (scripts/make-textures.mjs). As SVG feTurbulence backgrounds they were
+     repainted on the CPU in WebKit and kept phones hot. They are blended with `overlay`, so the files carry their own opacity. */
+  --tex-brushed:url("/tex/brushed.webp");
+  --tex-wood:url("/tex/wood.webp");
+  --tex-grain:url("/tex/grain.webp");
   --tex-screw:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='28'%3E%3Cdefs%3E%3CradialGradient id='g' cx='.35' cy='.3' r='.8'%3E%3Cstop offset='0' stop-color='%23f4f4f0'/%3E%3Cstop offset='.55' stop-color='%23a7aaa3'/%3E%3Cstop offset='1' stop-color='%235d605b'/%3E%3C/radialGradient%3E%3C/defs%3E%3Ccircle cx='14' cy='14.8' r='12' fill='rgba(0,0,0,.45)'/%3E%3Ccircle cx='14' cy='14' r='11.5' fill='url(%23g)'/%3E%3Ccircle cx='14' cy='14' r='11.5' fill='none' stroke='rgba(0,0,0,.55)'/%3E%3Cg transform='rotate(-28 14 14)'%3E%3Crect x='4' y='12.4' width='20' height='3.2' rx='1' fill='%232b2c2a'/%3E%3Crect x='4' y='15' width='20' height='.9' fill='rgba(255,255,255,.55)'/%3E%3C/g%3E%3C/svg%3E");
   color-scheme:dark;
 }
@@ -33,5 +35,5 @@ button,input,select{font:inherit;color:inherit}
 :focus-visible{outline:2px solid #fff;outline-offset:2px;box-shadow:0 0 0 4px #000}
 /* iOS zooms the whole page when a field with text smaller than 16px gets focus, and then leaves it zoomed. */
 @media (pointer:coarse){
-  input,select,textarea{font-size:16px!important}
+  input:not(#title),select,textarea{font-size:16px!important}   /* the cassette title is already 20px or more */
 }

@@ -30,13 +30,13 @@ kbd{font:inherit;font-weight:600;background:#3f4537;border-radius:3px;padding:0 
 .diag{white-space:pre-wrap;word-break:break-word;font:12.5px/1.5 ui-monospace,Menlo,Consolas,monospace;background:#171a14;color:#c9cdb9;padding:10px 12px;border-radius:4px;max-height:240px;overflow:auto;margin:0 0 4px}
 
 @media (max-width:900px){
-  .plate{grid-template-columns:1fr;grid-template-areas:"top" "bay" "mixer";padding:20px 14px 20px}
+  .plate{grid-template-columns:minmax(0,1fr);grid-template-areas:"top" "bay" "mixer";padding:20px 14px 20px}
   .bay{max-width:460px;width:100%;margin:0 auto}
 }
 @media (max-width:620px){
-  .machine{grid-template-columns:9px 1fr 9px}
+  .machine{grid-template-columns:9px minmax(0,1fr) 9px}
   .plate{padding:20px 9px 16px}
-  .mixer{grid-template-columns:repeat(4,1fr);row-gap:14px}
+  .mixer{grid-template-columns:repeat(4,minmax(0,1fr));row-gap:14px}
   .strip.wide{grid-column:1/-1;display:flex;flex-wrap:wrap;justify-content:space-around;align-items:center;gap:12px 10px;
     border-left:0;box-shadow:none;padding:10px 0;border-top:1px solid rgba(0,0,0,.25);border-bottom:1px solid rgba(0,0,0,.25)}
   .strip.wide .fader{height:110px}

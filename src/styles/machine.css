@@ -1,5 +1,5 @@
 /* ---------- machine ---------- */
-.machine{max-width:1100px;margin:0 auto;display:grid;grid-template-columns:28px 1fr 28px;border-radius:9px;
+.machine{max-width:1100px;margin:0 auto;display:grid;grid-template-columns:28px minmax(0,1fr) 28px;   /* minmax(0,…): a plain 1fr never shrinks below its widest content, and WebKit then made the page wider than the phone */border-radius:9px;
   box-shadow:0 46px 70px rgba(0,0,0,.6),0 16px 22px rgba(0,0,0,.5),0 3px 0 #120d08,18px 30px 60px rgba(0,0,0,.35)}
 .cheek{background:var(--tex-wood) 0 0/100% 100% no-repeat,
   linear-gradient(90deg,rgba(255,225,180,.30),rgba(255,225,180,0) 28%,rgba(0,0,0,0) 62%,rgba(0,0,0,.45)),
@@ -18,7 +18,7 @@
    linear-gradient(180deg,#cfd1cb,#b9bcb5 45%,#93968f);
   background-blend-mode:normal,normal,normal,normal,overlay,normal,normal;
   padding:22px 24px 24px;display:grid;gap:18px 26px;
-  grid-template-columns:minmax(300px,410px) 1fr;
+  grid-template-columns:minmax(300px,410px) minmax(0,1fr);
   grid-template-areas:"top top" "bay mixer";
   box-shadow:inset 0 1px 0 rgba(255,255,255,.9),inset 0 -3px 4px rgba(0,0,0,.3),inset 4px 0 5px -3px rgba(0,0,0,.45),inset -4px 0 5px -3px rgba(0,0,0,.45);
 }
@@ -26,7 +26,7 @@
 .brand{display:flex;flex-direction:column;line-height:1;align-self:center}
 .logo{font-weight:600;font-style:italic;font-size:30px;letter-spacing:.01em}
 .model{font-size:12px;letter-spacing:.14em;margin-top:5px}
-.dial{flex:1 1 220px;height:54px;box-sizing:border-box;display:flex;align-items:center;padding:0 16px;border-radius:5px;position:relative;overflow:hidden;
+.dial{flex:1 1 220px;min-width:0;height:54px;box-sizing:border-box;display:flex;align-items:center;padding:0 16px;border-radius:5px;position:relative;overflow:hidden;
   background:radial-gradient(120% 160% at 50% 120%,#1c1608,#0a0b0c 60%);color:#6d5a2c;font-size:15px;font-weight:500;text-shadow:none;
   border:2px solid #050505;
   box-shadow:inset 0 4px 12px #000,0 0 0 1px #878a84,0 1px 0 2px rgba(255,255,255,.7),0 -1px 0 2px rgba(0,0,0,.25);transition:color .3s,text-shadow .3s}
