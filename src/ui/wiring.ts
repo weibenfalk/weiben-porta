@@ -12,6 +12,7 @@ import { frame } from './animation.js';
 import { closeDlg, openDlg, wireDialogs } from './dialogs.js';
 import { say } from './display.js';
 import { buildMixerUI, paintArm, paintSources, paintSwitches, paintSync, toggleArm } from './mixerUI.js';
+import { wirePwa } from './pwa.js';
 import { wireSkin } from './skin.js';
 import { drawMap } from './tapeMap.js';
 import { resample } from '../audio/resample.js';
@@ -228,6 +229,7 @@ export function startup() {
   wireInputChoice();
   wireDialogs();
   wireSkin();
+  wirePwa();
   wireSwitches();
   wireNewTape();
   wireKeyboard();
