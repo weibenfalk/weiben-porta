@@ -12,6 +12,7 @@ import { frame } from './animation.js';
 import { closeDlg, openDlg, wireDialogs } from './dialogs.js';
 import { say } from './display.js';
 import { buildMixerUI, paintArm, paintSources, paintSwitches, paintSync, toggleArm } from './mixerUI.js';
+import { wireSkin } from './skin.js';
 import { drawMap } from './tapeMap.js';
 import { resample } from '../audio/resample.js';
 /* Start-up: build the mixer, connect every button and key to what it does, load the saved tape. */
@@ -226,6 +227,7 @@ export function startup() {
   wireSync();
   wireInputChoice();
   wireDialogs();
+  wireSkin();
   wireSwitches();
   wireNewTape();
   wireKeyboard();

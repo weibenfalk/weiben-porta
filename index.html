@@ -11,6 +11,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600&family=Jost:ital,wght@0,400;0,500;0,600;1,600&display=swap" rel="stylesheet">
+<script>try{document.documentElement.dataset.skin=localStorage.getItem('weibenporta.skin')==='wood'?'wood':'black'}catch(e){document.documentElement.dataset.skin='black'}</script>
 <script>
   window.va = window.va || function () {
     (window.vaq = window.vaq || []).push(arguments);
@@ -33,7 +34,7 @@
       <div class="brand"><span class="logo">Weiben Porta</span><span class="model">4-track cassette studio</span></div>
       <output class="dial" id="dial" aria-live="polite"><span class="dialtext" id="dialText"><span id="dialInner">switch on, or press record.</span></span></output>
       <div class="inbox"><label for="device">sound card</label><select id="device"><option value="">chosen at power on</option></select></div>
-      <div class="topbtns"><button class="btn" id="openHelp" type="button">help</button><button class="btn" id="openSettings" type="button">settings</button></div>
+      <div class="topbtns"><button class="btn" id="openHelp" type="button">help</button><button class="btn" id="openSettings" type="button">settings</button><button class="btn" id="skinBtn" type="button" title="switch between black plastic and teak" aria-label="switch skin">skin</button></div>
       <button class="power" id="power" type="button" aria-pressed="false"><span class="lampdot"></span>power</button>
     </header>
 
