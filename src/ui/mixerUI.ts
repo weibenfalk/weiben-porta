@@ -25,7 +25,7 @@ const dbText = (v: number) => (v > 0.05 ? '+' : '') + (Math.abs(v) < 0.05 ? '0' 
 export function buildMixerUI() {
   const mx = $('mixer');
   /* input strip: row for row the same layout as the track strips next to it */
-  const inp = h('div', 'strip wide');
+  const inp = h('div', 'strip wide inp');
   inp.setAttribute('aria-label', 'input');
   inp.appendChild(
     h(

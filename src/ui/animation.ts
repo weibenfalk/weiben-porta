@@ -3,7 +3,7 @@ import { contentEnd, curPos, stop } from '../audio/transport.js';
 import { TAPE } from '../config.js';
 import { rt } from '../runtime.js';
 import { S } from '../state.js';
-import { $, clamp, reduceMotion } from '../util.js';
+import { $, clamp } from '../util.js';
 import { say } from './display.js';
 import { sampleHealth } from './health.js';
 import { needles } from './mixerUI.js';
@@ -113,7 +113,9 @@ export function frame(ts: number) {
     pr = rR.toFixed(1);
   if (pl !== lastPackL) packL.setAttribute('r', (lastPackL = pl));
   if (pr !== lastPackR) packR.setAttribute('r', (lastPackR = pr));
-  if (speed && !reduceMotion) {
+  if (speed) {
+    /* The reels turn even when the system asks for reduced motion: they are the machine's one sign of life, small and inside a window.
+       (When this honoured the setting, iPhones with "Reduce Motion" on showed a dead cassette.) */
     angL -= (speed * dt * 12600) / rL;
     angR -= (speed * dt * 12600) / rR;
     reelL.setAttribute('transform', `rotate(${(angL % 360).toFixed(1)} 115.5 114)`);

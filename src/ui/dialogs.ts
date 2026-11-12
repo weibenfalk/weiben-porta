@@ -47,14 +47,14 @@ export function wireDialogs() {
     paintDiag();
     try {
       await navigator.clipboard.writeText(t);
-      say('diagnostics copied.');
+      say('diagnostics copied.', { quiet: true });
     } catch (e) {
       const r = document.createRange();
       r.selectNodeContents($('diag'));
       const sel = getSelection()!;
       sel.removeAllRanges();
       sel.addRange(r);
-      say('diagnostics selected. press ctrl or cmd + C to copy.');
+      say('diagnostics selected. press ctrl or cmd + C to copy.', { quiet: true });
     }
   });
 }

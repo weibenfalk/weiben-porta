@@ -22,6 +22,6 @@ export function wireSkin() {
   $('skinBtn').addEventListener('click', () => {
     const next: Skin = current() === 'black' ? 'wood' : 'black';
     applySkin(next);
-    say(next === 'black' ? 'black plastic skin.' : 'teak and aluminium skin.');
+    say(next === 'black' ? 'black plastic skin.' : 'teak and aluminium skin.', { quiet: true });
   });
 }

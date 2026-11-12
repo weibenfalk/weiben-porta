@@ -172,5 +172,5 @@ export async function powerOff() {
   if (rt.ctx) rt.ctx.suspend();
   document.body.classList.remove('on');
   $('power').setAttribute('aria-pressed', 'false');
-  say('switched off. the tape stays in.');
+  say('switched off. the tape stays in.', { quiet: true });
 }

@@ -156,7 +156,8 @@ function wireSwitches() {
     say(
       S.click
         ? `click on, ${S.bpm} beats a minute. you get four clicks before recording starts.`
-        : 'click off.'
+        : 'click off.',
+      { quiet: true }
     );
   });
   $('tapeFx').addEventListener('click', () => {
@@ -183,7 +184,7 @@ function wireNewTape() {
     $<HTMLInputElement>('title').value = '';
     saveState();
     drawMap();
-    say('new tape in. write the song title on the cassette.');
+    say('new tape in. write the song title on the cassette.', { quiet: true });
   });
 }
 
@@ -213,7 +214,7 @@ async function loadTape() {
       else tape[i] = { data: t.data, sr: t.sr, buf: null };
     }
   drawMap();
-  if (contentEnd()) say('the tape from last time is in. press play.');
+  if (contentEnd()) say('the tape from last time is in. press play.', { quiet: true });
   requestAnimationFrame(frame);
 }
 

@@ -25,7 +25,7 @@ export function wirePwa() {
     offered = null;
     btn.hidden = true;
     await p.prompt();
-    if ((await p.userChoice).outcome === 'accepted') say('installed.');
+    if ((await p.userChoice).outcome === 'accepted') say('installed.', { quiet: true });
   });
   window.addEventListener('appinstalled', () => {
     btn.hidden = true;

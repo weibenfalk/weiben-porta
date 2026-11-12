@@ -89,7 +89,7 @@ export async function play() {
   await ensureCtx();
   if (rt.pos >= end - 0.05) rt.pos = 0;
   startRun(false);
-  say('playing.');
+  say('playing.', { quiet: true });
 }
 export async function record() {
   if (rt.busy || rt.transport === 'rec') return;
@@ -120,7 +120,7 @@ export async function record() {
     rec.start(f, S.arm.slice());
     rt.transport = 'rec';
     paintTransport();
-    say(`recording on ${names(rt.recTracks)}.`);
+    say(`recording on ${names(rt.recTracks)}.`, { quiet: true });
     return;
   }
   if (rt.pos >= TAPE - 0.5) {
@@ -131,7 +131,8 @@ export async function record() {
   say(
     counted
       ? `four clicks, then you are recording on ${names(rt.recTracks)}.`
-      : `recording on ${names(rt.recTracks)}.`
+      : `recording on ${names(rt.recTracks)}.`,
+    { quiet: true }
   );
 }
 /** Stop the tape. If it was recording, the take is processed and put on the tape. */
@@ -157,7 +158,7 @@ export async function stop() {
     } finally {
       rt.busy = false;
     }
-  } else say('stopped.');
+  } else say('stopped.', { quiet: true });
 }
 /** Cut the recorded audio onto the tape, compensating for the measured delay, and report what happened. */
 async function finishRecording() {
@@ -270,7 +271,7 @@ export function undoTake() {
     tape[u.track] = u.prev;
     saveTrack(u.track);
   });
-  say(`the last take on ${names(rt.undo.map(u => u.track))} is removed.`);
+  say(`the last take on ${names(rt.undo.map(u => u.track))} is removed.`, { quiet: true });
   rt.undo = null;
   $<HTMLButtonElement>('undo').disabled = true;
   drawMap();
@@ -294,5 +295,5 @@ export function nudge(ms: number) {
     saveTrack(i);
   });
   drawMap();
-  say(`${names(list)} moved ${Math.abs(ms)} ms ${ms > 0 ? 'later' : 'earlier'}.`);
+  say(`${names(list)} moved ${Math.abs(ms)} ms ${ms > 0 ? 'later' : 'earlier'}.`, { quiet: true });
 }
