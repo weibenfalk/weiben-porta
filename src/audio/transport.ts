@@ -1,4 +1,4 @@
-import { TAPE } from '../config.js';
+import { TAPE, TRIM_RANGE } from '../config.js';
 import { rt } from '../runtime.js';
 import { S, saveTrack, tape } from '../state.js';
 import { say } from '../ui/display.js';
@@ -11,6 +11,9 @@ import { rec } from './recorder.js';
 import { totalLatency } from './sync.js';
 import type { Samples, TakeInfo, UndoEntry } from '../types.js';
 /* The tape transport: play, record (with punch-in), stop, seek, undo, and the metronome. */
+
+/** A take whose loudest sample is below this (about -20 dB) gets a hint to turn the trim up. */
+const QUIET_PEAK = 0.1;
 
 /** Seconds of tape that have something on them. */
 export const contentEnd = () => tape.reduce((m, t) => (t ? Math.max(m, t.data.length / t.sr) : m), 0);
@@ -168,6 +171,7 @@ async function finishRecording() {
   const stt = rec.stats,
     done: number[] = [],
     silent: number[] = [],
+    quiet: number[] = [],
     undoList: UndoEntry[] = [],
     info: TakeInfo[] = [];
   let clipped = false,
@@ -210,6 +214,7 @@ async function finishRecording() {
     done.push(i);
     if (clipN > 20) clipped = true;
     else if (peak > 1) hot = true;
+    else if (peak < QUIET_PEAK) quiet.push(i);
   }
   if (info.length)
     rt.lastTake = {
@@ -244,7 +249,12 @@ async function finishRecording() {
   else if (hot) msg += ' it was recorded too hot: turn the trim knob down and record again.';
   else if ((rt.lastTake?.drops ?? 0) > 2)
     msg += ` the sound dropped out ${rt.lastTake!.drops} times: close other audio programs, then open settings and copy the diagnostics.`;
-  else if (!silent.length) msg += ' press to start and listen, or switch on the next track.';
+  else if (quiet.length) {
+    const db = Math.round(20 * Math.log10(Math.max(...quiet.map(i => info.find(t => t.track === i)!.peak))));
+    msg += quiet.some(i => S.tracks[i].trim < TRIM_RANGE[1])
+      ? ` ${names(quiet)} came in very quiet (peak ${db} dB): press auto trim or turn the trim up, then record again.`
+      : ` ${names(quiet)} came in very quiet (peak ${db} dB): turn the input volume up in the system sound settings.`;
+  } else if (!silent.length) msg += ' press to start and listen, or switch on the next track.';
   say(msg);
 }
 /** Move the tape to `p` seconds. */
